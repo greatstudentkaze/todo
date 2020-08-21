@@ -38,15 +38,17 @@ const render = function () {
 todoControl.addEventListener('submit', function (evt) {
   evt.preventDefault();
 
-  const newTask = {
-    value: headerInput.value,
-    completed: false
+  if (headerInput.value.trim()) {
+    const newTask = {
+      value: headerInput.value.trim(),
+      completed: false
+    }
+
+    todoData.push(newTask);
+
+    headerInput.value = '';
+    render();
   }
-
-  todoData.push(newTask);
-
-  headerInput.value = '';
-  render();
 });
 
 render();
