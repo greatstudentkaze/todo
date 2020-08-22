@@ -24,12 +24,18 @@ const render = function () {
     if (item.completed) {
       todoCompleted.append(elem);
     } else {
-      todoList.append(elem);
+      todoList.prepend(elem);
     }
 
-    const todoCompleteBtn = elem.querySelector('.todo-complete');
+    const todoCompleteBtn = elem.querySelector('.todo-complete'),
+      todoRemoveBtn = elem.querySelector('.todo-remove');
+
     todoCompleteBtn.addEventListener('click', function () {
       item.completed = !item.completed;
+      render();
+    });
+    todoRemoveBtn.addEventListener('click', function () {
+      todoData.splice(todoData.indexOf(item), 1);
       render();
     });
   });
@@ -40,6 +46,7 @@ todoControl.addEventListener('submit', function (evt) {
 
   if (headerInput.value.trim()) {
     const newTask = {
+      id: `todo${(+new Date).toString(16)}!las65(3`,
       value: headerInput.value.trim(),
       completed: false
     }
