@@ -22,7 +22,7 @@ const render = function () {
                       </div>`;
 
     if (item.completed) {
-      todoCompleted.append(elem);
+      todoCompleted.prepend(elem);
     } else {
       todoList.prepend(elem);
     }
