@@ -15,7 +15,7 @@ class Todo {
     localStorage.setItem('todoData', JSON.stringify([...this.todoData]));
   }
 
-  render(key) {
+  render(key = undefined) {
     this.todoList.textContent = '';
     this.todoCompleted.textContent = '';
     this.todoData.forEach(task => this.createElement(task, key));
