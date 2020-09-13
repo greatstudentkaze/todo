@@ -38,7 +38,14 @@ class Todo {
             </div>`);
 
     if (task.completed) this.todoCompleted.append(elem);
-    else this.todoList.append(elem);
+    else {
+      const editBtn = document.createElement('button');
+      editBtn.classList.add('todo-edit');
+      editBtn.type = 'button';
+      elem.querySelector('.todo-buttons').prepend(editBtn);
+
+      this.todoList.append(elem);
+    }
   }
 
   addTask(evt) {
@@ -82,6 +89,27 @@ class Todo {
     this.render(key);
   }
 
+  editTask(task) {
+    const taskText = task.querySelector('.text-todo');
+    taskText.contentEditable = true;
+    taskText.style.outline = 'none';
+    taskText.style.fontWeight = 'bold';
+    taskText.focus();
+    taskText.addEventListener('keydown', evt => {
+      if (evt.code === 'Enter') {
+        evt.preventDefault();
+        taskText.blur();
+      }
+    });
+    taskText.addEventListener('blur', () => {
+      this.todoData.get(task.key).value = taskText.textContent.trim();
+      this.saveToStorage();
+      taskText.contentEditable = false;
+      taskText.style.outline = '';
+      taskText.style.fontWeight = '';
+    });
+  }
+
   handler(evt) {
     const target = evt.target;
 
@@ -93,6 +121,8 @@ class Todo {
     } else if (target.classList.contains('todo-complete')) {
       target.closest('.todo-item').classList.add('todo-item-transparent');
       setTimeout(() => this.completeTask(target.closest('.todo-item').key), 300);
+    } else if (target.classList.contains('todo-edit')) {
+      this.editTask(target.closest('.todo-item'));
     }
   }
 
