@@ -15,16 +15,20 @@ class Todo {
     localStorage.setItem('todoData', JSON.stringify([...this.todoData]));
   }
 
-  render() {
+  render(key) {
     this.todoList.textContent = '';
     this.todoCompleted.textContent = '';
-    this.todoData.forEach(this.createElement.bind(this));
+    this.todoData.forEach(task => this.createElement(task, key));
     this.saveToStorage();
   }
 
-  createElement(task) {
+  createElement(task, key) {
     const elem = document.createElement('li');
     elem.classList.add('todo-item');
+    if (key === task.key) {
+      setTimeout(() => elem.classList.remove('todo-item-transparent'), 100);
+      elem.classList.add('todo-item-transparent');
+    }
     elem.key = task.key;
     elem.insertAdjacentHTML('beforeend',
       `<span class="text-todo">${task.value}</span>
@@ -50,11 +54,11 @@ class Todo {
       this.todoData.set(task.key, task);
       this.render();
 
-      this.input.value = '';
-      this.input.placeholder = 'Какие планы?';
+      this.resetInput();
     } else {
       this.input.value = '';
       this.input.placeholder = 'Введите задачу!';
+      this.input.closest('.header').style.backgroundColor = '#c53838';
     }
   }
 
@@ -62,14 +66,20 @@ class Todo {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   }
 
+  resetInput() {
+    this.input.value = '';
+    this.input.placeholder = 'Какие планы?';
+    this.input.closest('.header').style.backgroundColor = '';
+  }
+
   removeTask(key) {
     this.todoData.delete(key);
-    this.render();
+    this.render(key);
   }
 
   completeTask(key) {
     this.todoData.get(key).completed = !this.todoData.get(key).completed;
-    this.render();
+    this.render(key);
   }
 
   handler(evt) {
@@ -77,12 +87,18 @@ class Todo {
 
     if (!target.closest('.todo-item')) return;
 
-    if (target.classList.contains('todo-remove')) this.removeTask(target.closest('.todo-item').key);
-    else if (target.classList.contains('todo-complete')) this.completeTask(target.closest('.todo-item').key);
+    if (target.classList.contains('todo-remove')) {
+      target.closest('.todo-item').classList.add('todo-item-transparent');
+      setTimeout(() => this.removeTask(target.closest('.todo-item').key), 300);
+    } else if (target.classList.contains('todo-complete')) {
+      target.closest('.todo-item').classList.add('todo-item-transparent');
+      setTimeout(() => this.completeTask(target.closest('.todo-item').key), 300);
+    }
   }
 
   init() {
     this.form.addEventListener('submit', this.addTask.bind(this));
+    this.input.addEventListener('blur', this.resetInput.bind(this));
     this.tasksContainer.addEventListener('click', this.handler.bind(this));
     this.render();
   }

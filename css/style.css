@@ -67,6 +67,8 @@ body {
     box-shadow: 0 2px 4px rgba(44, 62, 80, 0.15);
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+
+    transition: 0.3s;
 }
 
 .header-input {
@@ -137,6 +139,13 @@ body {
     margin: 0 0 10px 0;
     padding: 14px 100px 14px 14px;
     word-break: break-word;
+
+    transition: 0.3s;
+}
+
+.todo-item-transparent {
+    opacity: 0;
+    transform: scale(0.9);
 }
 
 .todo-item:last-of-type {
